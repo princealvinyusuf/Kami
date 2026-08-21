@@ -14,7 +14,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(TaxonomySeeder::class);
-        $this->call(LeadSettingsSeeder::class);
+        $this->call([
+            TaxonomySeeder::class,
+            LeadSettingsSeeder::class,
+            KamiProfileSeeder::class,
+            KamiServiceSeeder::class,
+            KamiCertificationSeeder::class,
+            KamiPartnerSeeder::class,
+            KamiPortfolioSeeder::class,
+            KamiLegalSeeder::class,
+        ]);
     }
 }
