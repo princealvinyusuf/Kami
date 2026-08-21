@@ -1,0 +1,47 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --color-brand-black: #0a0a0a;
+    --color-brand-gold: #806400;
+    --color-brand-gold-light: #f2df9b;
+    --color-brand-white: #fffdf8;
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer base {
+    html { scroll-behavior: smooth; }
+    body { @apply bg-brand-white text-brand-black antialiased; }
+    img, video, iframe { max-width: 100%; }
+    [x-cloak] { display: none !important; }
+    :focus-visible { @apply outline-2 outline-offset-2 outline-brand-gold; }
+    @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    .nav-drop { @apply block rounded px-3 py-2 hover:bg-brand-gold hover:text-black; }
+    .chip { @apply rounded-full bg-neutral-100 px-3 py-1; }
+    .page-shell { @apply mx-auto max-w-7xl px-4 lg:px-8; }
+    .page-hero { @apply border-b border-brand-gold/30 bg-brand-black px-4 py-16 text-white md:py-24; }
+    .page-hero h1 { font-size: clamp(2.25rem, 8vw, 3.75rem); overflow-wrap: anywhere; }
+    .prose-copy { @apply text-base leading-8 text-neutral-700; }
+    .filter-input { @apply min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2; }
+    .detail-list { @apply mt-4 grid gap-3; }
+    .detail-list li { @apply flex gap-3 text-neutral-700; }
+    .detail-list li::before { content: '—'; @apply font-bold text-brand-gold; }
+}
+
+.bg-brand-black .text-brand-gold {
+    color: var(--color-brand-gold-light);
+}

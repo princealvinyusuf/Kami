@@ -1,0 +1,2 @@
+@props(['item'])
+<figure class="rounded-2xl border border-brand-gold/30 bg-brand-black p-6 text-white"><blockquote class="text-lg leading-relaxed">“{{ $item->content }}”</blockquote><figcaption class="mt-5 text-sm"><strong class="text-brand-gold">{{ $item->author_name }}</strong>@if($item->author_title || $item->institution)<span class="block text-white/60">{{ collect([$item->author_title,$item->institution])->filter()->join(' · ') }}</span>@endif @if($item->program)<span class="block text-white/60">{{ $item->program }}</span>@endif</figcaption></figure>

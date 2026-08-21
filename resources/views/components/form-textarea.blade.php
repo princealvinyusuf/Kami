@@ -1,0 +1,2 @@
+@props(['name','label','rows'=>4])
+<div><label for="{{ $name }}" class="mb-1 block text-sm font-bold">{{ $label }}</label><textarea id="{{ $name }}" name="{{ $name }}" rows="{{ $rows }}" @error($name) aria-invalid="true" aria-describedby="{{ $name }}-error" @enderror {{ $attributes->class('w-full rounded-md border border-neutral-300 bg-white px-3 py-2 focus:border-brand-gold') }}>{{ old($name) }}</textarea>@error($name)<p id="{{ $name }}-error" class="mt-1 text-sm text-red-700">{{ $message }}</p>@enderror</div>

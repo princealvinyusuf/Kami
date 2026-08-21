@@ -1,0 +1,6 @@
+<x-layouts.public title="{{ config('app.name', 'KAMI') }}">
+<section class="bg-brand-black px-4 py-24 text-white"><div class="mx-auto max-w-7xl"><p class="font-bold uppercase tracking-widest text-brand-gold">Professional development</p><h1 class="mt-4 max-w-4xl text-5xl font-black tracking-tight md:text-7xl">Build capability with confidence.</h1><p class="mt-6 max-w-2xl text-lg text-white/70">Training, certification, and professional services presented with clarity and integrity.</p></div></section>
+<section id="services" class="mx-auto max-w-7xl px-4 py-20"><x-section-heading title="Our services" eyebrow="What we do">Service information will be published here after verification.</x-section-heading><div class="mt-10"><x-empty-state title="Services coming soon">Verified service details are being prepared.</x-empty-state></div></section>
+<section id="training" class="bg-neutral-100 px-4 py-20"><div class="mx-auto max-w-7xl"><x-section-heading title="Training" eyebrow="Learn" /><div class="mt-10"><x-empty-state title="Training schedule coming soon" /></div></div></section>
+<section id="certification" class="mx-auto max-w-7xl px-4 py-20"><x-section-heading title="Certification" eyebrow="Validate" /><div class="mt-10"><x-empty-state title="Certification schedule coming soon" /></div></section>
+</x-layouts.public>
