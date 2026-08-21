@@ -4,7 +4,7 @@ Aplikasi Laravel untuk mengelola informasi pelatihan, sertifikasi, layanan, arti
 
 ## Persyaratan
 
-- PHP 8.3+ beserta ekstensi umum Laravel (`ctype`, `curl`, `dom`, `fileinfo`, `filter`, `mbstring`, `openssl`, `pdo`, `session`, `tokenizer`, dan `xml`)
+- PHP 8.2+ beserta ekstensi umum Laravel (`ctype`, `curl`, `dom`, `fileinfo`, `filter`, `mbstring`, `openssl`, `pdo`, `session`, `tokenizer`, dan `xml`)
 - Composer 2
 - Node.js LTS dan npm
 - MySQL 8.0+ atau MariaDB 10.6+ untuk produksi
