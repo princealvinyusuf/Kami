@@ -4,17 +4,21 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --color-brand-black: #0a0a0a;
-    --color-brand-gold: #806400;
-    --color-brand-gold-light: #f2df9b;
-    --color-brand-white: #fffdf8;
+    --color-brand-black: #11110f;
+    --color-brand-charcoal: #1c1b18;
+    --color-brand-gold: #8a6a13;
+    --color-brand-gold-light: #efd783;
+    --color-brand-cream: #f4f0e7;
+    --color-brand-white: #fbfaf6;
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 @layer base {
     html { scroll-behavior: smooth; }
-    body { @apply bg-brand-white text-brand-black antialiased; }
+    body { @apply overflow-x-hidden bg-brand-white text-brand-black antialiased; }
+    ::selection { @apply bg-brand-gold-light text-brand-black; }
+    a, button, input, select, textarea, summary { -webkit-tap-highlight-color: transparent; }
     img, video, iframe { max-width: 100%; }
     [x-cloak] { display: none !important; }
     :focus-visible { @apply outline-2 outline-offset-2 outline-brand-gold; }
@@ -30,18 +34,53 @@
 }
 
 @layer components {
-    .nav-drop { @apply block rounded px-3 py-2 hover:bg-brand-gold hover:text-black; }
-    .chip { @apply rounded-full bg-neutral-100 px-3 py-1; }
-    .page-shell { @apply mx-auto max-w-7xl px-4 lg:px-8; }
-    .page-hero { @apply border-b border-brand-gold/30 bg-brand-black px-4 py-16 text-white md:py-24; }
-    .page-hero h1 { font-size: clamp(2.25rem, 8vw, 3.75rem); overflow-wrap: anywhere; }
-    .prose-copy { @apply text-base leading-8 text-neutral-700; }
-    .filter-input { @apply min-h-11 rounded-lg border border-neutral-300 bg-white px-3 py-2; }
+    .nav-link {
+        @apply relative rounded-full px-3 py-2 text-sm font-semibold text-white/75 transition hover:bg-white/8 hover:text-white;
+    }
+    .nav-link-active { @apply bg-white/10 text-brand-gold-light; }
+    .nav-drop { @apply flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-white/75 transition hover:bg-white/8 hover:text-brand-gold-light; }
+    .chip { @apply inline-flex items-center rounded-full border border-black/8 bg-brand-cream px-3 py-1.5 font-semibold text-neutral-700; }
+    .page-shell { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+    .surface-grid {
+        background-image: linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+        background-size: 42px 42px;
+    }
+    .page-hero {
+        @apply relative isolate overflow-hidden border-b border-white/10 bg-brand-black px-4 py-16 text-white md:py-24;
+        background-image: radial-gradient(circle at 82% 15%, rgba(197,151,34,.19), transparent 28%), linear-gradient(135deg, #11110f, #1d1b16 58%, #12110e);
+    }
+    .page-hero::after {
+        content: ''; @apply pointer-events-none absolute inset-0 -z-10 opacity-50;
+        background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: linear-gradient(to left, black, transparent 75%);
+    }
+    .page-hero > div { @apply relative; }
+    .page-hero h1 { font-size: clamp(2.5rem, 7vw, 4.75rem); line-height: .98; letter-spacing: -.045em; overflow-wrap: anywhere; }
+    .prose-copy { @apply text-base leading-8 text-neutral-700 md:text-lg; }
+    .filter-input {
+        @apply min-h-12 rounded-xl border border-black/12 bg-white px-4 py-2.5 text-sm shadow-sm outline-none transition placeholder:text-neutral-400 hover:border-black/25 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/10;
+    }
+    .panel { @apply rounded-2xl border border-black/8 bg-white shadow-[0_18px_60px_-32px_rgba(17,17,15,.3)]; }
+    .admin-panel { @apply rounded-2xl border border-black/8 bg-white shadow-[0_12px_35px_-25px_rgba(17,17,15,.35)]; }
+    .admin-table { @apply min-w-full divide-y divide-black/8 text-sm; }
+    .admin-table thead { @apply bg-brand-cream/70 text-left text-xs uppercase tracking-wider text-neutral-600; }
+    .admin-table th { @apply px-5 py-4 font-bold; }
+    .admin-table td { @apply px-5 py-4; }
+    .admin-table tbody { @apply divide-y divide-black/8; }
+    .admin-table tbody tr { @apply transition hover:bg-brand-cream/40; }
     .detail-list { @apply mt-4 grid gap-3; }
     .detail-list li { @apply flex gap-3 text-neutral-700; }
-    .detail-list li::before { content: '—'; @apply font-bold text-brand-gold; }
+    .detail-list li::before { content: '✓'; @apply mt-0.5 font-black text-brand-gold; }
+    .eyebrow { @apply inline-flex items-center gap-2 text-xs font-black uppercase tracking-[.2em] text-brand-gold; }
+    .eyebrow::before { content: ''; @apply h-px w-6 bg-current; }
 }
 
 .bg-brand-black .text-brand-gold {
     color: var(--color-brand-gold-light);
+}
+
+@media (hover: hover) {
+    .lift-card { transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease; }
+    .lift-card:hover { transform: translateY(-5px); box-shadow: 0 24px 55px -30px rgba(17,17,15,.45); border-color: rgba(138,106,19,.35); }
 }

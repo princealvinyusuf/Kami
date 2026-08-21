@@ -7,8 +7,9 @@
 @if($errors->any())<div role="alert" class="mb-8 rounded-xl border border-red-300 bg-red-50 p-5 text-red-900"><p class="font-bold">Periksa kembali data yang Anda isi.</p><ul class="mt-2 list-disc pl-5 text-sm">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 
 <div class="grid items-start gap-8 lg:grid-cols-[22rem_1fr]">
-    <aside class="rounded-2xl border border-brand-gold/40 bg-white p-6 shadow-sm lg:sticky lg:top-28">
-        <p class="text-xs font-bold uppercase tracking-widest text-brand-gold">Ringkasan</p>
+    <aside class="overflow-hidden rounded-3xl border border-brand-gold/30 bg-white p-6 shadow-[0_24px_60px_-32px_rgba(17,17,15,.4)] lg:sticky lg:top-28">
+        <div class="-mx-6 -mt-6 mb-6 h-2 bg-gradient-to-r from-brand-gold to-brand-gold-light"></div>
+        <p class="eyebrow">Ringkasan</p>
         <h2 class="mt-2 text-2xl font-black">{{ $title }}</h2>
         @if($target?->summary)<p class="mt-3 text-sm leading-6 text-neutral-600">{{ $target->summary }}</p>@endif
         <dl class="mt-5 grid gap-3 text-sm">
@@ -20,10 +21,10 @@
         @if($whatsappUrl)<a href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer" class="mt-5 block rounded-lg border border-green-700 px-4 py-3 text-center font-bold text-green-800">Tanya melalui WhatsApp</a>@endif
     </aside>
 
-    <form action="{{ route('registrations.store', ['type'=>$type, 'slug'=>$target?->slug]) }}" method="post" enctype="multipart/form-data" class="grid gap-7 rounded-2xl border bg-white p-6 shadow-sm md:p-10">
+    <form action="{{ route('registrations.store', ['type'=>$type, 'slug'=>$target?->slug]) }}" method="post" enctype="multipart/form-data" class="panel grid gap-7 p-6 md:p-10">
         @csrf
         <div class="absolute -left-[9999px]" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
-        <div><h2 class="text-2xl font-black">Data calon peserta</h2><p class="mt-2 text-sm text-neutral-600">Kolom bertanda * wajib diisi.</p></div>
+        <div><p class="eyebrow">Langkah berikutnya</p><h2 class="mt-3 text-2xl font-black">Data calon peserta</h2><p class="mt-2 text-sm text-neutral-600">Kolom bertanda * wajib diisi.</p></div>
         <div class="grid gap-6 md:grid-cols-2">
             <x-form-input name="name" label="Nama lengkap *" autocomplete="name" required />
             <x-form-input name="email" label="Email *" type="email" autocomplete="email" required />

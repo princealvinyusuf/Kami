@@ -1,8 +1,8 @@
 <x-layouts.admin :title="($item->exists ? 'Edit ' : 'Tambah ').$config['label']">
-<div class="flex flex-wrap items-center justify-between gap-4"><div><p class="text-sm font-bold uppercase tracking-widest text-brand-gold">Kelola Konten</p><h1 class="mt-1 text-3xl font-black">{{ $item->exists ? 'Edit' : 'Tambah' }} {{ $config['label'] }}</h1></div><a href="{{ route('admin.resources.index', $resource) }}" class="rounded-lg border bg-white px-4 py-2">Kembali</a></div>
+<div class="flex flex-wrap items-center justify-between gap-4"><div><p class="eyebrow">Kelola Konten</p><h1 class="mt-3 text-4xl font-black tracking-tight">{{ $item->exists ? 'Edit' : 'Tambah' }} {{ $config['label'] }}</h1></div><a href="{{ route('admin.resources.index', $resource) }}" class="rounded-xl border border-black/10 bg-white px-4 py-2 font-bold">← Kembali</a></div>
 @if($errors->any())<div role="alert" class="mt-6 rounded-xl border border-red-300 bg-red-50 p-5 text-red-900"><p class="font-bold">Periksa kembali isian berikut.</p><ul class="mt-2 list-disc pl-5 text-sm">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>@endif
 @if($config['publication'] ?? false)<div class="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm"><strong>Perhatian:</strong> memilih “Terbit” saja tidak mempublikasikan konten. Konten publik mensyaratkan status Terbit + waktu terbit yang valid + Terverifikasi. Pastikan semua fakta telah diperiksa.</div>@endif
-<form x-data="{ slugTouched: {{ old('slug', $item->slug ?? '') ? 'true' : 'false' }} }" method="post" enctype="multipart/form-data" action="{{ $item->exists ? route('admin.resources.update', [$resource,$item->id]) : route('admin.resources.store', $resource) }}" class="mt-6 grid gap-6 rounded-xl border bg-white p-5 md:grid-cols-2 md:p-8">
+<form x-data="{ slugTouched: {{ old('slug', $item->slug ?? '') ? 'true' : 'false' }} }" method="post" enctype="multipart/form-data" action="{{ $item->exists ? route('admin.resources.update', [$resource,$item->id]) : route('admin.resources.store', $resource) }}" class="admin-panel mt-6 grid gap-7 p-5 md:grid-cols-2 md:p-8">
 @csrf @if($item->exists) @method('PUT') @endif
 @foreach($config['fields'] as $name => $field)
 @php
@@ -14,7 +14,7 @@
 @endphp
 <div class="{{ in_array($field['type'], ['textarea','list','images','multi'], true) ? 'md:col-span-2' : '' }}">
     @if($field['type'] === 'checkbox')
-        <input type="hidden" name="{{ $name }}" value="0"><label class="flex min-h-11 items-center gap-3 rounded-lg border p-3"><input type="checkbox" name="{{ $name }}" value="1" @checked((bool)$raw)><span class="font-bold">{{ $field['label'] }}</span></label>
+        <input type="hidden" name="{{ $name }}" value="0"><label class="flex min-h-12 items-center gap-3 rounded-xl border border-black/10 bg-brand-cream/40 p-4"><input type="checkbox" name="{{ $name }}" value="1" @checked((bool)$raw)><span class="font-bold">{{ $field['label'] }}</span></label>
     @elseif($field['type'] === 'relation')
         <label for="{{ $name }}" class="mb-1 block text-sm font-bold">{{ $field['label'] }}</label><select id="{{ $name }}" name="{{ $name }}" class="filter-input w-full"><option value="">Pilih</option>@foreach($options[$name] as $option)<option value="{{ $option->id }}" @selected((string)$raw===(string)$option->id)>{{ $option->{$field['display']} }}</option>@endforeach</select>
     @elseif($field['type'] === 'multi')
@@ -36,7 +36,7 @@
     @error($name)<p class="mt-1 text-sm text-red-700">{{ $message }}</p>@enderror
 </div>
 @endforeach
-<div class="flex flex-wrap gap-3 border-t pt-5 md:col-span-2"><button class="rounded-lg bg-brand-gold px-5 py-3 font-bold">Simpan</button><a href="{{ route('admin.resources.index', $resource) }}" class="rounded-lg border px-5 py-3">Batal</a>
+<div class="flex flex-wrap gap-3 border-t border-black/8 pt-6 md:col-span-2"><button class="rounded-xl bg-gradient-to-r from-brand-gold to-brand-gold-light px-6 py-3 font-black shadow-lg">Simpan perubahan</button><a href="{{ route('admin.resources.index', $resource) }}" class="rounded-xl border border-black/10 px-5 py-3 font-bold">Batal</a>
 @if($item->exists && $resource==='training-programs')<a href="{{ route('admin.resources.index',['resource'=>'training-schedules','training_program_id'=>$item->id]) }}" class="rounded-lg border px-5 py-3">Kelola jadwal program</a>@endif
 @if($item->exists && $resource==='certification-schemes')<a href="{{ route('admin.resources.index',['resource'=>'certification-schedules','certification_scheme_id'=>$item->id]) }}" class="rounded-lg border px-5 py-3">Kelola jadwal</a><a href="{{ route('admin.resources.index',['resource'=>'competency-units','certification_scheme_id'=>$item->id]) }}" class="rounded-lg border px-5 py-3">Kelola unit kompetensi</a>@endif
 </div>
