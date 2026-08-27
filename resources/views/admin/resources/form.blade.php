@@ -24,8 +24,21 @@
     @elseif(in_array($field['type'], ['textarea','list'], true))
         <label for="{{ $name }}" class="mb-1 block text-sm font-bold">{{ $field['label'] }}</label><textarea id="{{ $name }}" name="{{ $name }}" rows="{{ $field['rows'] ?? 6 }}" class="filter-input w-full">{{ $raw }}</textarea>
     @elseif(in_array($field['type'], ['image','file'], true))
-        <label for="{{ $name }}" class="mb-1 block text-sm font-bold">{{ $field['label'] }}</label><input id="{{ $name }}" name="{{ $name }}" type="file" class="filter-input w-full" @if($field['type']==='image') accept="image/jpeg,image/png,image/webp,image/x-icon" @endif>
-        @if($raw)<div class="mt-2 flex items-center gap-3 text-sm">@if($field['type']==='image')<img src="{{ Storage::disk($field['disk'])->url($raw) }}" alt="" class="h-16 w-16 rounded object-cover">@else<a class="font-bold underline" href="{{ route('admin.resources.download', [$resource,$item->id,$name]) }}">Unduh berkas saat ini</a>@endif<label><input type="checkbox" name="remove_uploads[]" value="{{ $name }}"> Hapus berkas saat disimpan</label></div>@endif
+        @php($accept = $field['accept'] ?? ($field['type'] === 'image' ? 'image/jpeg,image/png,image/webp,image/x-icon' : null))
+        <label for="{{ $name }}" class="mb-1 block text-sm font-bold">{{ $field['label'] }}</label><input id="{{ $name }}" name="{{ $name }}" type="file" class="filter-input w-full" @if($accept) accept="{{ $accept }}" @endif>
+        @if(isset($field['help']))<p class="mt-1 text-xs leading-5 text-neutral-500">{{ $field['help'] }}</p>@endif
+        @if($raw)
+            @php($uploadedImage = in_array(strtolower(pathinfo($raw, PATHINFO_EXTENSION)), ['jpg','jpeg','png','webp'], true))
+            <div class="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                @if($field['type']==='image')
+                    <img src="{{ Storage::disk($field['disk'])->url($raw) }}" alt="" class="h-16 w-16 rounded object-cover">
+                @elseif($uploadedImage)
+                    <img src="{{ route('admin.resources.download', [$resource,$item->id,$name]) }}" alt="Pratinjau {{ $field['label'] }}" class="h-20 w-28 rounded-lg border border-black/10 object-cover">
+                @endif
+                @if($field['type']==='file')<a class="font-bold underline" href="{{ route('admin.resources.download', [$resource,$item->id,$name]) }}" target="_blank">Lihat berkas saat ini</a>@endif
+                <label><input type="checkbox" name="remove_uploads[]" value="{{ $name }}"> Hapus berkas saat disimpan</label>
+            </div>
+        @endif
     @elseif($field['type'] === 'images')
         <label for="{{ $name }}" class="mb-1 block text-sm font-bold">{{ $field['label'] }}</label><input id="{{ $name }}" name="{{ $name }}[]" type="file" multiple accept="image/jpeg,image/png,image/webp" class="filter-input w-full"><p class="mt-1 text-xs text-neutral-500">Maksimal 12 gambar, masing-masing 4 MB.</p>
         @if($item->exists && $item->images->isNotEmpty())<div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">@foreach($item->images as $image)<label class="rounded border p-2"><img src="{{ Storage::disk('public')->url($image->path) }}" alt="{{ $image->alt_text }}" class="aspect-square w-full object-cover"><span class="mt-2 block text-xs"><input type="checkbox" name="remove_portfolio_images[]" value="{{ $image->id }}"> Hapus</span></label>@endforeach</div>@endif

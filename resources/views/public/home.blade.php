@@ -102,6 +102,24 @@
 
 @if($certifications->isNotEmpty())<section class="bg-brand-black py-20 text-white"><div class="page-shell"><div class="flex flex-wrap items-end justify-between gap-5"><x-section-heading eyebrow="Sertifikasi" title="Buktikan kompetensi" class="[&_div]:!text-white/60" /><x-button href="{{ route('certifications.index') }}" variant="secondary">Semua skema</x-button></div><div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">@foreach($certifications as $item)<x-certification-card :item="$item" />@endforeach</div></div></section>@endif
 
+@if($legalDocuments->isNotEmpty())
+<section class="page-shell py-20 md:py-28">
+    <div class="grid gap-10 lg:grid-cols-[.72fr_1.28fr] lg:items-end">
+        <x-section-heading eyebrow="Transparansi" title="Dokumen legal terverifikasi">
+            <p>Informasi hukum dan kebijakan yang menjadi dasar penyelenggaraan layanan KAMI.</p>
+        </x-section-heading>
+        <div class="rounded-2xl border border-brand-gold/20 bg-brand-cream px-5 py-4 text-sm leading-6 text-neutral-600">
+            Hanya dokumen berstatus <strong class="text-brand-black">Terbit</strong> dan <strong class="text-brand-black">Terverifikasi</strong> yang ditampilkan kepada publik.
+        </div>
+    </div>
+    <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        @foreach($legalDocuments as $document)
+            <x-legal-document-card :document="$document" />
+        @endforeach
+    </div>
+</section>
+@endif
+
 <section class="page-shell py-20"><div class="relative overflow-hidden rounded-[2rem] bg-brand-black p-8 text-white md:p-16"><div class="surface-grid absolute inset-0 opacity-40"></div><div class="absolute -right-20 -top-20 size-72 rounded-full bg-brand-gold/20 blur-3xl"></div><div class="relative"><p class="eyebrow text-brand-gold-light">Karier</p><h2 class="mt-5 max-w-4xl text-4xl font-black tracking-tight md:text-6xl">Masa depan tidak datang dengan peta. Mulai susun arahmu.</h2><p class="mt-6 max-w-2xl leading-8 text-white/65">Mulai dari pemetaan kebutuhan, pilih proses belajar, lalu pertimbangkan asesmen kompetensi ketika sudah siap.</p><x-button href="{{ route('contact') }}" class="mt-8">Mulai percakapan <span aria-hidden="true">→</span></x-button></div></div></section>
 
 @if($testimonials->isNotEmpty())<section class="bg-neutral-100 py-20"><div class="page-shell"><x-section-heading eyebrow="Pengalaman terverifikasi" title="Cerita peserta" /><div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">@foreach($testimonials as $item)<x-testimonial-card :item="$item" />@endforeach</div></div></section>@endif

@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use App\Models\CertificationCategory;
 use App\Models\CertificationScheme;
 use App\Models\ContactMessage;
+use App\Models\LegalDocument;
 use App\Models\TrainingCategory;
 use App\Models\TrainingProgram;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PublicSiteTest extends TestCase
@@ -71,6 +73,45 @@ class PublicSiteTest extends TestCase
             ->assertSee('Jadwal Sertifikasi')
             ->assertSee('Sertifikasi Analis Data')
             ->assertSee('Jakarta');
+    }
+
+    public function test_homepage_shows_verified_legal_documents_and_serves_their_images(): void
+    {
+        Storage::fake('local');
+        Storage::disk('local')->put('legal/cover.jpg', 'image-content');
+
+        $visible = LegalDocument::create([
+            'title' => 'Dasar Hukum KAMI',
+            'slug' => 'dasar-hukum-kami',
+            'type' => 'regulasi',
+            'body' => 'Ringkasan dasar hukum yang telah diverifikasi.',
+            'file_path' => 'legal/cover.jpg',
+            'status' => 'published',
+            'published_at' => now()->subMinute(),
+            'verification_status' => 'verified',
+        ]);
+        LegalDocument::create([
+            'title' => 'Dokumen Belum Terverifikasi',
+            'slug' => 'dokumen-belum-terverifikasi',
+            'type' => 'kebijakan',
+            'body' => 'Dokumen ini belum boleh tampil.',
+            'status' => 'published',
+            'published_at' => now()->subMinute(),
+            'verification_status' => 'unverified',
+        ]);
+
+        $attachmentUrl = route('legal-documents.attachment', ['legalDocument' => $visible->slug]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Dokumen legal terverifikasi')
+            ->assertSee('Dasar Hukum KAMI')
+            ->assertSee($attachmentUrl, false)
+            ->assertDontSee('Dokumen Belum Terverifikasi');
+
+        $this->get($attachmentUrl)->assertOk();
+        $this->get(route('legal-documents.attachment', ['legalDocument' => 'dokumen-belum-terverifikasi']))
+            ->assertNotFound();
     }
 
     public function test_catalog_and_detail_only_show_published_verified_content(): void

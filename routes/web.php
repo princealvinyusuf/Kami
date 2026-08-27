@@ -29,6 +29,7 @@ Route::get('/pemagangan', [PublicController::class, 'apprenticeship'])->name('ap
 Route::get('/konsultan', [PublicController::class, 'consulting'])->name('consulting');
 Route::get('/artikel', [PublicController::class, 'articles'])->name('articles.index');
 Route::get('/artikel/{article:slug}', [PublicController::class, 'article'])->name('articles.show');
+Route::get('/dokumen-legal/{legalDocument:slug}/berkas', [PublicController::class, 'legalDocumentAttachment'])->name('legal-documents.attachment');
 Route::get('/kontak', [ContactController::class, 'create'])->name('contact');
 Route::post('/kontak', [ContactController::class, 'store'])->middleware('throttle:5,1')->name('contact.store');
 Route::get('/daftar/{type}/{slug?}', [RegistrationController::class, 'create'])

@@ -9,6 +9,7 @@ use App\Models\ArticleCategory;
 use App\Models\CertificationCategory;
 use App\Models\CertificationSchedule;
 use App\Models\CertificationScheme;
+use App\Models\LegalDocument;
 use App\Models\Partner;
 use App\Models\Portfolio;
 use App\Models\Service;
@@ -21,6 +22,7 @@ use App\Models\TrainingSchedule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 class PublicController extends Controller
 {
@@ -64,7 +66,24 @@ class PublicController extends Controller
             'partners' => Partner::query()->published()->verified()->where('is_active', true)->orderBy('sort_order')->get(),
             'testimonials' => $this->visible(Testimonial::query())->latest('published_at')->limit(6)->get(),
             'articles' => $this->visible(Article::query())->with('category')->latest('published_at')->limit(3)->get(),
+            'legalDocuments' => $this->visible(LegalDocument::query())->latest('published_at')->limit(3)->get(),
         ]);
+    }
+
+    public function legalDocumentAttachment(LegalDocument $legalDocument)
+    {
+        $this->ensureVisible($legalDocument);
+        abort_unless(
+            $legalDocument->file_path
+            && Storage::disk('local')->exists($legalDocument->file_path),
+            404
+        );
+
+        return Storage::disk('local')->response(
+            $legalDocument->file_path,
+            basename($legalDocument->file_path),
+            ['X-Content-Type-Options' => 'nosniff']
+        );
     }
 
     public function about()

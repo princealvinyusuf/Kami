@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Models\ContactMessage;
+use App\Models\LegalDocument;
 use App\Models\Setting;
 use App\Models\TrainingCategory;
 use App\Models\TrainingProgram;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminCmsTest extends TestCase
@@ -52,6 +55,28 @@ class AdminCmsTest extends TestCase
 
         $program->update(['verification_status' => 'verified']);
         $this->get(route('trainings.show', $program))->assertOk();
+    }
+
+    public function test_admin_can_upload_an_image_for_a_legal_document(): void
+    {
+        Storage::fake('local');
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)->post(route('admin.resources.store', 'legal-documents'), [
+            'title' => 'Dokumen Legal Bergambar',
+            'slug' => '',
+            'type' => 'regulasi',
+            'body' => 'Ringkasan dokumen legal.',
+            'file_path' => UploadedFile::fake()->create('sampul.jpg', 100, 'image/jpeg'),
+            'status' => 'published',
+            'published_at' => now()->subMinute()->format('Y-m-d H:i:s'),
+            'verification_status' => 'verified',
+        ])->assertSessionHasNoErrors()
+            ->assertRedirect(route('admin.resources.index', 'legal-documents'));
+
+        $document = LegalDocument::firstOrFail();
+        $this->assertNotNull($document->file_path);
+        Storage::disk('local')->assertExists($document->file_path);
     }
 
     public function test_admin_can_update_settings(): void
