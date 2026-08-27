@@ -34,7 +34,7 @@ class PublicController extends Controller
         abort_unless(
             $model->status === ContentStatus::Published
             && $model->verification_status === VerificationStatus::Verified
-            && $model->published_at?->isPast(),
+            && ($model->published_at === null || $model->published_at->isPast()),
             404
         );
     }

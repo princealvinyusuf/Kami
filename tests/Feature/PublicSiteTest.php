@@ -37,7 +37,6 @@ class PublicSiteTest extends TestCase
             'title' => 'Pelatihan Data',
             'slug' => 'pelatihan-data',
             'status' => 'published',
-            'published_at' => now()->subMinute(),
             'verification_status' => 'verified',
         ]);
         $training->schedules()->create([
@@ -56,7 +55,6 @@ class PublicSiteTest extends TestCase
             'title' => 'Sertifikasi Analis Data',
             'slug' => 'sertifikasi-analis-data',
             'status' => 'published',
-            'published_at' => now()->subMinute(),
             'verification_status' => 'verified',
         ]);
         $certification->schedules()->create([

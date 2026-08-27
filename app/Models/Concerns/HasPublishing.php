@@ -14,6 +14,10 @@ trait HasPublishing
 
     public function scopePublished(Builder $query): Builder
     {
-        return $query->where('status', ContentStatus::Published)->where('published_at', '<=', now());
+        return $query
+            ->where('status', ContentStatus::Published)
+            ->where(fn (Builder $query) => $query
+                ->whereNull('published_at')
+                ->orWhere('published_at', '<=', now()));
     }
 }
