@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\CertificationCategory;
+use App\Models\CertificationScheme;
 use App\Models\ContactMessage;
 use App\Models\TrainingCategory;
 use App\Models\TrainingProgram;
@@ -21,6 +23,56 @@ class PublicSiteTest extends TestCase
             ->assertSee('property="og:title"', false)
             ->assertSee('name="twitter:card"', false)
             ->assertDontSee('"EducationalOrganization"', false);
+    }
+
+    public function test_homepage_shows_upcoming_training_and_certification_schedules(): void
+    {
+        $trainingCategory = TrainingCategory::create([
+            'name' => 'Digital',
+            'slug' => 'digital',
+            'is_active' => true,
+        ]);
+        $training = TrainingProgram::create([
+            'training_category_id' => $trainingCategory->id,
+            'title' => 'Pelatihan Data',
+            'slug' => 'pelatihan-data',
+            'status' => 'published',
+            'published_at' => now()->subMinute(),
+            'verification_status' => 'verified',
+        ]);
+        $training->schedules()->create([
+            'starts_at' => now()->addWeek(),
+            'location' => 'Bandung',
+            'status' => 'scheduled',
+        ]);
+
+        $certificationCategory = CertificationCategory::create([
+            'name' => 'Teknologi',
+            'slug' => 'teknologi',
+            'is_active' => true,
+        ]);
+        $certification = CertificationScheme::create([
+            'certification_category_id' => $certificationCategory->id,
+            'title' => 'Sertifikasi Analis Data',
+            'slug' => 'sertifikasi-analis-data',
+            'status' => 'published',
+            'published_at' => now()->subMinute(),
+            'verification_status' => 'verified',
+        ]);
+        $certification->schedules()->create([
+            'starts_at' => now()->addWeeks(2),
+            'location' => 'Jakarta',
+            'status' => 'scheduled',
+        ]);
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Jadwal Pelatihan')
+            ->assertSee('Pelatihan Data')
+            ->assertSee('Bandung')
+            ->assertSee('Jadwal Sertifikasi')
+            ->assertSee('Sertifikasi Analis Data')
+            ->assertSee('Jakarta');
     }
 
     public function test_catalog_and_detail_only_show_published_verified_content(): void

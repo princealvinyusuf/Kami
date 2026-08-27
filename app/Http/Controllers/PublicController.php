@@ -7,6 +7,7 @@ use App\Enums\VerificationStatus;
 use App\Models\Article;
 use App\Models\ArticleCategory;
 use App\Models\CertificationCategory;
+use App\Models\CertificationSchedule;
 use App\Models\CertificationScheme;
 use App\Models\Partner;
 use App\Models\Portfolio;
@@ -16,6 +17,7 @@ use App\Models\Testimonial;
 use App\Models\Trainer;
 use App\Models\TrainingCategory;
 use App\Models\TrainingProgram;
+use App\Models\TrainingSchedule;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -43,6 +45,22 @@ class PublicController extends Controller
             'services' => $this->visible(Service::query())->orderBy('sort_order')->limit(6)->get(),
             'trainings' => $this->visible(TrainingProgram::query())->with(['category', 'schedules' => fn ($q) => $q->where('status', 'scheduled')->where('starts_at', '>=', now())->orderBy('starts_at')])->latest('published_at')->limit(6)->get(),
             'certifications' => $this->visible(CertificationScheme::query())->with(['category', 'schedules' => fn ($q) => $q->where('status', 'scheduled')->where('starts_at', '>=', now())->orderBy('starts_at')])->latest('published_at')->limit(6)->get(),
+            'trainingSchedules' => TrainingSchedule::query()
+                ->where('status', 'scheduled')
+                ->where('starts_at', '>=', now())
+                ->whereHas('program', fn ($q) => $this->visible($q))
+                ->with('program.category')
+                ->orderBy('starts_at')
+                ->limit(4)
+                ->get(),
+            'certificationSchedules' => CertificationSchedule::query()
+                ->where('status', 'scheduled')
+                ->where('starts_at', '>=', now())
+                ->whereHas('scheme', fn ($q) => $this->visible($q))
+                ->with('scheme.category')
+                ->orderBy('starts_at')
+                ->limit(4)
+                ->get(),
             'partners' => Partner::query()->published()->verified()->where('is_active', true)->orderBy('sort_order')->get(),
             'testimonials' => $this->visible(Testimonial::query())->latest('published_at')->limit(6)->get(),
             'articles' => $this->visible(Article::query())->with('category')->latest('published_at')->limit(3)->get(),

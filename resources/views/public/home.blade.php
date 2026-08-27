@@ -45,6 +45,52 @@
 
 <section class="page-shell py-20 md:py-28"><div class="mb-10 max-w-3xl"><p class="eyebrow">Pilih jalur</p><h2 class="mt-4 text-4xl font-black tracking-tight md:text-6xl">Belajar dan pengakuan kompetensi adalah proses berbeda.</h2></div><div class="grid overflow-hidden rounded-[2rem] border border-black/10 lg:grid-cols-2"><div class="bg-gradient-to-br from-brand-gold-light to-[#c89b2d] p-8 md:p-12"><p class="text-xs font-black uppercase tracking-[.2em]">01 · Pelatihan</p><h3 class="mt-5 text-3xl font-black">Membangun pengetahuan dan keterampilan</h3><p class="mt-5 leading-7 text-black/70">Pelatihan berfokus pada proses belajar dan praktik. Hasilnya mendukung kesiapan kerja, tetapi bukan pengakuan kompetensi formal.</p></div><div class="relative bg-brand-black p-8 text-white md:p-12"><div class="surface-grid absolute inset-0 opacity-30"></div><div class="relative"><p class="text-xs font-black uppercase tracking-[.2em] text-brand-gold-light">02 · Sertifikasi</p><h3 class="mt-5 text-3xl font-black">Mengukur kompetensi melalui asesmen</h3><p class="mt-5 leading-7 text-white/65">Sertifikasi menilai bukti kompetensi terhadap skema. Bila melibatkan LSP mitra, identitas LSP ditampilkan secara jelas; KAMI tidak diposisikan sebagai LSP kecuali ada data resmi yang menyatakannya.</p></div></div></div></section>
 
+@if($trainingSchedules->isNotEmpty() || $certificationSchedules->isNotEmpty())
+<section class="bg-brand-cream py-20 md:py-28">
+    <div class="page-shell">
+        <x-section-heading eyebrow="Agenda mendatang" title="Jadwal terdekat">
+            <p>Pilih jadwal pelatihan atau sertifikasi yang sesuai dengan rencana pengembangan kompetensimu.</p>
+        </x-section-heading>
+
+        <div class="mt-10 grid gap-10 lg:grid-cols-2">
+            @if($trainingSchedules->isNotEmpty())
+            <div>
+                <div class="mb-5 flex items-end justify-between gap-4">
+                    <div>
+                        <p class="eyebrow">Belajar</p>
+                        <h3 class="mt-2 text-2xl font-black">Jadwal Pelatihan</h3>
+                    </div>
+                    <a href="{{ route('trainings.index') }}" class="text-sm font-black underline decoration-brand-gold decoration-2 underline-offset-4">Semua program</a>
+                </div>
+                <div class="grid gap-4">
+                    @foreach($trainingSchedules as $schedule)
+                        <x-schedule-card :schedule="$schedule" type="training" />
+                    @endforeach
+                </div>
+            </div>
+            @endif
+
+            @if($certificationSchedules->isNotEmpty())
+            <div>
+                <div class="mb-5 flex items-end justify-between gap-4">
+                    <div>
+                        <p class="eyebrow">Asesmen</p>
+                        <h3 class="mt-2 text-2xl font-black">Jadwal Sertifikasi</h3>
+                    </div>
+                    <a href="{{ route('certifications.index') }}" class="text-sm font-black underline decoration-brand-gold decoration-2 underline-offset-4">Semua skema</a>
+                </div>
+                <div class="grid gap-4">
+                    @foreach($certificationSchedules as $schedule)
+                        <x-schedule-card :schedule="$schedule" type="certification" />
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        </div>
+    </div>
+</section>
+@endif
+
 @if($trainings->isNotEmpty())<section class="bg-neutral-100 py-20"><div class="page-shell"><div class="flex flex-wrap items-end justify-between gap-5"><x-section-heading eyebrow="Pelatihan" title="Program untuk bertumbuh" /><x-button href="{{ route('trainings.index') }}" variant="secondary">Semua program</x-button></div><div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">@foreach($trainings as $item)<x-training-card :item="$item" />@endforeach</div></div></section>@endif
 
 @if($certifications->isNotEmpty())<section class="bg-brand-black py-20 text-white"><div class="page-shell"><div class="flex flex-wrap items-end justify-between gap-5"><x-section-heading eyebrow="Sertifikasi" title="Buktikan kompetensi" class="[&_div]:!text-white/60" /><x-button href="{{ route('certifications.index') }}" variant="secondary">Semua skema</x-button></div><div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">@foreach($certifications as $item)<x-certification-card :item="$item" />@endforeach</div></div></section>@endif
